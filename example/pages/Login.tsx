@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@onerouter/core";
 
 const Login: FC = () => {
   const navigate = useNavigate();
