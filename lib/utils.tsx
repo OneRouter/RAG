@@ -3,7 +3,7 @@ import {
   IndexRouteObject,
   NonIndexRouteObject,
   Outlet,
-} from "react-router-dom";
+} from "@onerouter/core";
 
 export type AuthIndexRouteObject<T extends Record<string, any> = any> =
   IndexRouteObject & {
