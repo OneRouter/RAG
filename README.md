@@ -1,17 +1,15 @@
-## react-router-auth-plus
+# Router Auth Guard
 
-## Introduce
-
-Make you easy to use permission management based on react-router v6.
+## Easy to use permission management based on react-router v6 (forked from [linxianxi/react-router-auth-plus](https://github.com/linxianxi/react-router-auth-plus) to import from react-router instead of react-router-dom.
 
 ## Install
 
 ```shell
-npm install react-router-auth-plus
+npm install @onerouter/rag
 
 OR
 
-yarn add react-router-auth-plus
+yarn add @onerouter/rag
 ```
 
 ## Usage
@@ -30,8 +28,8 @@ const routers = [{ path: "/home", element: <Home />, auth: ["admin"] }];
 ```jsx
 // routers.tsx
 import { lazy } from "react";
-import { Navigate } from "react-router-dom";
-import { AuthRouteObject } from "react-router-auth-plus";
+import { Navigate } from "@onerouter/core";
+import { AuthRouteObject } from "@onerouter/rag";
 
 const Layout = lazy(() => import("./layout/Layout"));
 const Application = lazy(() => import("./pages/Application"));
@@ -73,19 +71,19 @@ export const routers: AuthRouteObject[] = [
 ];
 ```
 
-In react-router-dom 6.4+, you can choose two ways to render routers
+With [@onerouter/core](https://npmjs.com/package/@onerouter/core), you can choose two ways to render routers
 
-1、you can use RouterProvider and createBrowserRouter
+1、you can use RouterProvider and createRouter
 
 ```jsx
 // App.tsx
+import { Suspense } from "react";
+import { createBrowserRouter, RouterProvider } from "@onerouter/core";
+import { getAuthRouters } from "@onerouter/rag";
+import useSWR from "swr";
 import NotAuth from "./pages/403";
 import Loading from "./components/Loading";
-import { getAuthRouters } from "react-router-auth-plus";
-import useSWR from "swr";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routers } from "./routers";
-import { Suspense } from "react";
 
 const fetcher = async (url: string): Promise<string[]> =>
   await new Promise((resolve) => {
@@ -110,7 +108,7 @@ function App() {
   return (
     <Suspense fallback={<Loading />}>
       <RouterProvider
-        router={createBrowserRouter(_routers)}
+        router={createRouter(_routers)}
         // route loader loading
         fallbackElement={<Loading />}
       />
@@ -121,14 +119,14 @@ function App() {
 export default App;
 ```
 
-2、you can use BrowserRouter to wrapper `<App />`
+2、you can use `Router` to wrap `<App />`
 
 ```jsx
+import { useRoutes } from "@onerouter/core";
+import { getAuthRouters } from "@onerouter/rag";
+import useSWR from "swr";
 import NotAuth from "./pages/403";
 import Loading from "./components/Loading";
-import { getAuthRouters } from "react-router-auth-plus";
-import useSWR from "swr";
-import { useRoutes } from "react-router-dom";
 import { routers } from "./routers";
 
 const fetcher = async (url: string): Promise<string[]> =>
@@ -160,20 +158,20 @@ export default App;
 ```jsx
 // main.tsx(vite) or index.tsx(create-react-app)
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <BrowserRouter>
+  <Router>
     <App />
-  </BrowserRouter>
+  </Router>
 );
 ```
 
 **Dynamic Menus**
 
-If you set `genRoutersProp` and `genAuthRoutersProp` in router config, `react-router-auth-plus` automatically passes `routers` and `authRouters` to props.
+If you set `genRoutersProp` and `genAuthRoutersProp` in router config, `@onerouter/rag` automatically passes `routers` and `authRouters` to props.
 
 ```jsx
 // Layout.tsx
 import { FC } from "react";
-import { AuthRouteObject } from "react-router-auth-plus";
+import { AuthRouteObject } from "@onerouter/rag";
 
 interface LayoutProps {
   // children routers (if you set genRoutersProp)
@@ -235,7 +233,7 @@ export const routers: MetaMenuAuthRouteObject[] = [
 ```jsx
 // Layout.tsx
 import { FC } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "@onerouter/core";
 import { MetaMenuAuthRouteObject } from "../routers";
 
 interface LayoutProps {
