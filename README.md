@@ -30,7 +30,7 @@ const routers = [{ path: "/home", element: <Home />, auth: ["admin"] }];
 ```jsx
 // routers.tsx
 import { lazy } from "react";
-import { Navigate } from "@onerouter/core";
+import { Navigate } from "@onerouter/core"; // or "react-router" (same as "react-router-dom"/"react-router-native")
 import { AuthRouteObject } from "@onerouter/rag";
 
 const Layout = lazy(() => import("./layout/Layout"));
@@ -80,7 +80,7 @@ With [@onerouter/core](https://npmjs.com/package/@onerouter/core), you can choos
 ```jsx
 // App.tsx
 import { Suspense } from "react";
-import { createBrowserRouter, RouterProvider } from "@onerouter/core";
+import { createRouter, RouterProvider } from "@onerouter/core";
 import { getAuthRouters } from "@onerouter/rag";
 import useSWR from "swr";
 import NotAuth from "./pages/403";
@@ -124,7 +124,7 @@ export default App;
 2、you can use `Router` to wrap `<App />`
 
 ```jsx
-import { useRoutes } from "@onerouter/core";
+import { useRoutes } from "@onerouter/core"; // or "react-router" (same as "react-router-dom"/"react-router-native")
 import { getAuthRouters } from "@onerouter/rag";
 import useSWR from "swr";
 import NotAuth from "./pages/403";
@@ -164,6 +164,30 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <App />
   </Router>
 );
+```
+
+OR
+
+```jsx
+// App.tsx(react-native/Expo)
+// ... (imports, etc.)
+
+const App = () => {
+  const Routes = useRoutes(
+    getAuthRouters({
+      routers,
+      noAuthElement: (router) => <NotAuth />,
+      render: (element) => (isValidating ? <Loading /> : element),
+      auth: auth || [],
+    })
+  )
+  // ... other stuff?
+  return(
+    <Router>
+      <Routes />
+    </Router>
+  )
+}
 ```
 
 **Dynamic Menus**
